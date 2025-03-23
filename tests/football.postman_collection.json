@@ -1,0 +1,307 @@
+{
+  "info": {
+    "_postman_id": "758d105a-5764-4922-aef1-57d100530bcb",
+    "name": "football",
+    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+    "_exporter_id": "42957475"
+  },
+  "item": [
+    {
+      "name": "teams",
+      "item": [
+        {
+          "name": "GET all Teams",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "\r",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "localhost:4000/api/v1/teams"
+          },
+          "response": []
+        },
+        {
+          "name": "Get by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "localhost:4000/api/v1/teams/67e006fe31e0f7cca01da9e8"
+          },
+          "response": []
+        },
+        {
+          "name": "POST to Teams",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"teamName\": \"Rams\",\r\n    \"city\": \"LA\",\r\n    \"establishedYear\": 1999,\r\n    \"championshipWins\": 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "localhost:4000/api/v1/teams"
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH for Teams",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"championshipWins\": 100\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "localhost:4000/api/v1/teams/67e006fe31e0f7cca01da9e8"
+          },
+          "response": []
+        },
+        {
+          "name": "DEL for Teams",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "localhost:4000/api/v1/teams/67e006fe31e0f7cca01da9e8"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "players",
+      "item": [
+        {
+          "name": "Get all Players",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is an array\", function () {",
+                  "    const responseBody = pm.response.json();",
+                  "    pm.expect(responseBody).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test(\"First item has playerName property\", function () {",
+                  "    const responseBody = pm.response.json();",
+                  "    if (responseBody.length > 0) {",
+                  "        pm.expect(responseBody[0]).to.have.property('playerName');",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "localhost:4000/api/v1/players"
+          },
+          "response": []
+        },
+        {
+          "name": "GET by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Correct player is returned\", function () {",
+                  "    const responseBody = pm.response.json();",
+                  "    pm.expect(responseBody._id).to.eql(pm.collectionVariables.get(\"playerId\"));",
+                  "});",
+                  "",
+                  "pm.test(\"Has the playerName field\", function () {",
+                  "    const responseBody = pm.response.json();",
+                  "    pm.expect(responseBody).to.have.property('playerName');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "localhost:4000/api/v1/players/{{playerId}}"
+          },
+          "response": []
+        },
+        {
+          "name": "POST player",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201 (Created)\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has newly created player\", function () {",
+                  "    const responseBody = pm.response.json();",
+                  "    pm.expect(responseBody).to.have.property('_id').that.is.not.null;",
+                  "    pm.expect(responseBody).to.have.property('playerName').that.is.not.null;",
+                  "    pm.expect(responseBody).to.have.property('position').that.is.not.null;",
+                  "    pm.expect(responseBody).to.have.property('age').that.is.not.null;",
+                  "    pm.expect(responseBody).to.have.property('isStarter').that.is.not.null;",
+                  "    pm.expect(responseBody).to.have.property('team').that.is.not.null;",
+                  "});",
+                  "",
+                  "pm.test(\"Save the new player's ID to environment\", function () {",
+                  "    const responseBody = pm.response.json();",
+                  "    pm.collectionVariables.set(\"playerId\", responseBody._id);",
+                  "    pm.expect(responseBody._id).to.not.be.null;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"playerName\": \"Tom Brady\",\r\n    \"position\": \"QB\",\r\n    \"age\": 45,\r\n    \"isStarter\": true,\r\n    \"team\": \"67e006e031e0f7cca01da9e6\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "localhost:4000/api/v1/players"
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH player",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Player is updated correctly\", function () {",
+                  "    const responseBody = pm.response.json();",
+                  "    pm.expect(responseBody).to.have.property('position');",
+                  "});",
+                  "",
+                  "pm.test(\"Updated player's ID is the same\", function () {",
+                  "    const responseBody = pm.response.json();",
+                  "    pm.expect(responseBody._id).to.eql(pm.collectionVariables.get(\"playerId\"));",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"position\": \"RB\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "localhost:4000/api/v1/players/{{playerId}}"
+          },
+          "response": []
+        },
+        {
+          "name": "DEL player",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response message indicates success\", function () {",
+                  "    const responseBody = pm.response.json();",
+                  "    pm.expect(responseBody).to.have.property('message');",
+                  "    pm.expect(responseBody.message).to.include('deleted successfully');",
+                  "});",
+                  "",
+                  "pm.test(\"Deleted document's _id is null\", function () {",
+                  "    const responseBody = pm.response.json();",
+                  "    pm.expect(responseBody._id).to.not.eql(true);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "localhost:4000/api/v1/players/{{playerId}}"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "playerId",
+      "value": "",
+      "type": "string"
+    }
+  ]
+} 
