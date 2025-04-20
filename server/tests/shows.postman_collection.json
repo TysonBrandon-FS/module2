@@ -1,0 +1,324 @@
+{
+	"info": {
+		"_postman_id": "758d105a-5764-4922-aef1-57d100530bcb",
+		"name": "shows",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "42957475"
+	},
+	"item": [
+		{
+			"name": "networks",
+			"item": [
+				{
+					"name": "GET all networks",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:4000/api/v1/networks"
+					},
+					"response": []
+				},
+				{
+					"name": "Get by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:4000/api/v1/networks"
+					},
+					"response": []
+				},
+				{
+					"name": "POST to networks",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"networkName\": \"ESPN\",\r\n    \"headquarters\": \"LA\",\r\n    \"establishedYear\": 1945,\r\n    \"channelNumber\": 27\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:4000/api/v1/networks"
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH for networks",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"networkName\": \"ESPN\",\r\n    \"headquarters\": \"LA\",\r\n    \"establishedYear\": 1945,\r\n    \"channelNumber\": 27\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:4000/api/v1/networks"
+					},
+					"response": []
+				},
+				{
+					"name": "DEL for networks",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:4000/api/v1/networks"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "show",
+			"item": [
+				{
+					"name": "Get all shows",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is an array\", function () {\r",
+									"    const responseBody = pm.response.json();\r",
+									"    pm.expect(responseBody).to.be.an('array');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"First item has playerName property\", function () {\r",
+									"    const responseBody = pm.response.json();\r",
+									"    if (responseBody.length > 0) {\r",
+									"        pm.expect(responseBody[0]).to.have.property('showName');\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:4000/api/v1/shows"
+					},
+					"response": []
+				},
+				{
+					"name": "GET by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Correct show is returned\", function () {\r",
+									"    const responseBody = pm.response.json();\r",
+									"    pm.expect(responseBody._id).to.eql(pm.collectionVariables.get(\"showId\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Has the showName field\", function () {\r",
+									"    const responseBody = pm.response.json();\r",
+									"    pm.expect(responseBody).to.have.property('showName');\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:4000/api/v1/shows/{{showId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "POST shows",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 (Created)\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response has newly created player\", function () {\r",
+									"    const responseBody = pm.response.json();\r",
+									"    pm.expect(responseBody).to.have.property('_id').that.is.not.null;\r",
+									"    pm.expect(responseBody).to.have.property('showName').that.is.not.null;\r",
+									"    pm.expect(responseBody).to.have.property('genre').that.is.not.null;\r",
+									"    pm.expect(responseBody).to.have.property('releaseYear').that.is.not.null;\r",
+									"    pm.expect(responseBody).to.have.property('isActive').that.is.not.null;\r",
+									"    pm.expect(responseBody).to.have.property('network').that.is.not.null;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Save the new player's ID to environment\", function () {\r",
+									"    const responseBody = pm.response.json();\r",
+									"    pm.collectionVariables.set(\"showId\", responseBody._id);\r",
+									"    pm.expect(responseBody._id).to.not.be.null;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"showName\": \"Greys Anatomy\",\r\n    \"genre\": \"Drama\",\r\n    \"releaseYear\": 2004,\r\n    \"isActive\": true,\r\n    \"network\": \"680500589ec35ec159728773\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:4000/api/v1/shows"
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH shows",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Player is updated correctly\", function () {\r",
+									"    const responseBody = pm.response.json();\r",
+									"    pm.expect(responseBody).to.have.property('position');\r",
+									"   \r",
+									"});\r",
+									"\r",
+									"pm.test(\"Updated player's ID is the same\", function () {\r",
+									"    const responseBody = pm.response.json();\r",
+									"    pm.expect(responseBody._id).to.eql(pm.collectionVariables.get(\"playerId\"));\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"network\": \"67e006e031e0f7cca01da9e6\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:4000/api/v1/shows/{{showId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "DEL shows",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response message indicates success\", function () {\r",
+									"    const responseBody = pm.response.json();\r",
+									"    pm.expect(responseBody).to.have.property('message');\r",
+									"    pm.expect(responseBody.message).to.include('deleted successfully');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Deleted document's _id is null\", function () {\r",
+									"    const responseBody = pm.response.json();\r",
+									"    pm.expect(responseBody._id).to.not.eql(true);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"//test"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:4000/api/v1/shows/{{showId}}"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "playerId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "showId",
+			"value": ""
+		}
+	]
+}
