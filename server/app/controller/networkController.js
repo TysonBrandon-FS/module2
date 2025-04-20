@@ -80,7 +80,6 @@ const deleteNetwork = async (req, res) => {
       return res.status(404).json({ error: messages.NETWORK_NOT_FOUND });
     }
 
-    // Remove network reference from all its shows
     await TVShow.updateMany(
       { network: network._id },
       { $unset: { network: 1 } }

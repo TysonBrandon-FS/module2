@@ -6,7 +6,7 @@ const getAllShows = async (req, res) => {
   try {
     const shows = await TVShow.find()
       .select('showName genre releaseYear isActive network')
-      .populate('network', 'networkName headquarters');
+      .populate('network', 'networkName');
     res.status(200).json(shows);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -17,7 +17,7 @@ const getShowById = async (req, res) => {
   try {
     const show = await TVShow.findById(req.params.id)
       .select('showName genre releaseYear isActive network')
-      .populate('network', 'networkName headquarters');
+      .populate('network', 'networkName');
     if (!show) {
       return res.status(404).json({ error: messages.SHOW_NOT_FOUND });
     }
@@ -42,7 +42,7 @@ const createShow = async (req, res) => {
 
     const populatedShow = await TVShow.findById(savedShow._id)
       .select('showName genre releaseYear isActive network')
-      .populate('network', 'networkName headquarters');
+      .populate('network', 'networkName');
     
     res.status(201).json(populatedShow);
   } catch (error) {
@@ -70,7 +70,7 @@ const updateShow = async (req, res) => {
       { new: true, runValidators: true }
     )
     .select('showName genre releaseYear isActive network')
-    .populate('network', 'networkName headquarters');
+    .populate('network', 'networkName');
 
     res.status(200).json(updatedShow);
   } catch (error) {
