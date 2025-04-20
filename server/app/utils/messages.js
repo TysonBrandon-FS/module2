@@ -1,6 +1,7 @@
 module.exports = {
-    PLAYER_NOT_FOUND: 'Player not found',
-    TEAM_NOT_FOUND: 'Team not found',
-    PLAYER_DELETED: 'Player deleted successfully',
-    INVALID_TEAM: 'Invalid team ID provided'
+    SHOW_NOT_FOUND: 'TV Show not found',
+    NETWORK_NOT_FOUND: 'TV Network not found',
+    SHOW_DELETED: 'TV Show deleted successfully',
+    NETWORK_DELETED: 'TV Network deleted successfully',
+    INVALID_NETWORK: 'Invalid network ID provided'
 }; 

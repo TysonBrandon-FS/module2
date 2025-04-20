@@ -2,8 +2,8 @@ const express = require("express")
 const app = express()
 const morgan = require("morgan")
 const router = express.Router()
-const teamRoutes = require('./teamRoutes');
-const playerRoutes = require('./playerRoutes');
+const networkRoutes = require('./networkRoutes');
+const showRoutes = require('./showRoutes');
 
 
 app.use(express.json())
@@ -17,7 +17,7 @@ router.get("/",(req,res) => {
 })
 
 
-router.use('/teams', teamRoutes);
-router.use('/players', playerRoutes);
+router.use('/networks', networkRoutes);
+router.use('/shows', showRoutes);
 
 module.exports = router;
