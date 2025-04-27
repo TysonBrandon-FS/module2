@@ -4,9 +4,29 @@ const messages = require('../utils/messages.js');
 
 const getAllShows = async (req, res) => {
   try {
-    const shows = await TVShow.find()
-      .select('showName genre releaseYear isActive network')
+    const query = {};
+    if (req.query.releaseYear) {
+      query.releaseYear = { $gte: parseInt(req.query.releaseYear) };
+    }
+    if (req.query.genre) {
+      query.genre = req.query.genre;
+    }
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const skip = (page - 1) * limit;
+
+    const sortOptions = { showName: 1 };
+
+    const selectFields = 'showName genre releaseYear';
+
+    const shows = await TVShow.find(query)
+      .select(selectFields)
+      .sort(sortOptions)
+      .skip(skip)
+      .limit(limit)
       .populate('network', 'networkName');
+
     res.status(200).json(shows);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -17,7 +37,7 @@ const getShowById = async (req, res) => {
   try {
     const show = await TVShow.findById(req.params.id)
       .select('showName genre releaseYear isActive network')
-      .populate('network', 'networkName');
+      .populate('network', 'networkName headquarters');
     if (!show) {
       return res.status(404).json({ error: messages.SHOW_NOT_FOUND });
     }
@@ -42,7 +62,7 @@ const createShow = async (req, res) => {
 
     const populatedShow = await TVShow.findById(savedShow._id)
       .select('showName genre releaseYear isActive network')
-      .populate('network', 'networkName');
+      .populate('network', 'networkName headquarters');
     
     res.status(201).json(populatedShow);
   } catch (error) {
@@ -70,7 +90,7 @@ const updateShow = async (req, res) => {
       { new: true, runValidators: true }
     )
     .select('showName genre releaseYear isActive network')
-    .populate('network', 'networkName');
+    .populate('network', 'networkName headquarters');
 
     res.status(200).json(updatedShow);
   } catch (error) {

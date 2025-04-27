@@ -4,12 +4,29 @@ const messages = require('../utils/messages.js');
 
 const getAllNetworks = async (req, res) => {
   try {
-    const networks = await TVNetwork.find()
-      .select('-__v')
-      .populate({
-        path: 'shows',
-        select: '-__v -network'
-      });
+    const query = {};
+    if (req.query.establishedYear) {
+      query.establishedYear = { $gte: parseInt(req.query.establishedYear) };
+    }
+    if (req.query.subscribers) {
+      query.subscribers = { $lte: parseInt(req.query.subscribers) };
+    }
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const skip = (page - 1) * limit;
+
+    const sortOptions = { networkName: 1 };
+
+    const selectFields = 'networkName headquarters';
+
+    const networks = await TVNetwork.find(query)
+      .select(selectFields)
+      .sort(sortOptions)
+      .skip(skip)
+      .limit(limit)
+      .populate('shows', 'showName');
+
     res.status(200).json(networks);
   } catch (error) {
     res.status(500).json({ error: error.message });
