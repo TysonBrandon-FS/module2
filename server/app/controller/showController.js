@@ -3,34 +3,35 @@ const TVNetwork = require('../models/TVNetwork.js');
 const messages = require('../utils/messages.js');
 
 const getAllShows = async (req, res) => {
-  try {
-    const query = {};
-    if (req.query.releaseYear) {
-      query.releaseYear = { $gte: parseInt(req.query.releaseYear) };
-    }
-    if (req.query.genre) {
-      query.genre = req.query.genre;
-    }
+  let query = TVShow.find({});
 
-    const page = parseInt(req.query.page) || 1;
-    const limit = 10;
-    const skip = (page - 1) * limit;
-
-    const sortOptions = { showName: 1 };
-
-    const selectFields = 'showName genre releaseYear';
-
-    const shows = await TVShow.find(query)
-      .select(selectFields)
-      .sort(sortOptions)
-      .skip(skip)
-      .limit(limit)
-      .populate('network', 'networkName');
-
-    res.status(200).json(shows);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+  if (req.query.releaseYear) {
+    query = query.where('releaseYear').gte(parseInt(req.query.releaseYear));
   }
+  if (req.query.genre) {
+    query = query.where('genre').equals(req.query.genre);
+  }
+
+  if (req.query.sort) {
+    const sortBy = req.query.sort.split(',').join(' ');
+    query = query.sort(sortBy);
+  } else {
+    query = query.sort('showName');
+  }
+
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 5;
+  const skip = (page - 1) * limit;
+  query = query.skip(skip).limit(limit);
+
+  query = query.select('showName genre releaseYear').populate('network', 'networkName');
+
+  const shows = await query;
+  res.status(200).json({
+    data: shows,
+    success: true,
+    message: `${req.method} - request to Show endpoint`
+  });
 };
 
 const getShowById = async (req, res) => {
