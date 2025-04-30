@@ -5,12 +5,13 @@ describe('Show Service Tests', () => {
         const dramaShows = mockShows.filter(show => show.genre === 'Drama');
         const limitedData = dramaShows.map(show => ({
             showName: show.showName,
-            releaseYear: show.releaseYear
+            releaseYear: show.releaseYear,
+            genre: show.genre,
         }));
 
         expect(limitedData[0]).toHaveProperty('showName');
         expect(limitedData[0]).toHaveProperty('releaseYear');
-        expect(limitedData[0]).not.toHaveProperty('genre');
+        expect(limitedData[0]).toHaveProperty('genre');
         expect(limitedData[0]).not.toHaveProperty('isActive');
     });
 

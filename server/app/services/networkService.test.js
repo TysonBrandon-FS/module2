@@ -5,12 +5,13 @@ describe('Network Service Tests', () => {
         const nyNetworks = networks.filter(network => network.headquarters === 'New York');
         const limitedData = nyNetworks.map(network => ({
             networkName: network.networkName,
-            channelNumber: network.channelNumber
+            channelNumber: network.channelNumber,
+            headquarters: network.headquarters,
         }));
 
         expect(limitedData[0]).toHaveProperty('networkName');
         expect(limitedData[0]).toHaveProperty('channelNumber');
-        expect(limitedData[0]).not.toHaveProperty('headquarters');
+        expect(limitedData[0]).toHaveProperty('headquarters');
         expect(limitedData[0]).not.toHaveProperty('establishedYear');
     });
 
